@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kevin Steve Mora Herrera - CV</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            overflow-x: hidden;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.5), rgba(15, 23, 42, 0.9));
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-top: 1rem;
+        }
+
+        .profile-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .photo-container {
+            position: relative;
+        }
+
+        .photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 3px solid #06b6d4;
+            box-shadow: 0 0 30px rgba(6, 182, 212, 0.5);
+            object-fit: cover;
+        }
+
+        .name {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 0 20px rgba(34, 211, 238, 0.5);
+            margin-bottom: 0.5rem;
+        }
+
+        .highlight {
+            color: #06b6d4;
+        }
+
+        .subtitle {
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            color: rgba(34, 211, 238, 0.8);
+            margin-bottom: 2rem;
+        }
+
+        .contact {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            color: #67e8f9;
+            text-decoration: none;
+            transition: all 0.3s;
+            padding: 0.5rem;
+            background: rgba(30, 41, 59, 0.3);
+            border-radius: 0.5rem;
+            border: 1px solid rgba(6, 182, 212, 0.2);
+        }
+
+        .contact-item:hover {
+            color: white;
+            border-color: #06b6d4;
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
+            transform: translateY(-2px);
+        }
+
+        section {
+            margin-bottom: 4rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        section:nth-child(1) { animation-delay: 0.1s; }
+        section:nth-child(2) { animation-delay: 0.2s; }
+        section:nth-child(3) { animation-delay: 0.3s; }
+        section:nth-child(4) { animation-delay: 0.4s; }
+        section:nth-child(5) { animation-delay: 0.5s; }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-title {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: bold;
+            color: white;
+            margin-bottom: 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, #06b6d4, #67e8f9);
+            border-radius: 2px;
+        }
+
+        .profile {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            border-radius: 1rem;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .profile p {
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            line-height: 1.6;
+            color: #cbd5e1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .highlight-text {
+            color: #06b6d4;
+            font-weight: bold;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: #06b6d4;
+            color: black;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 0.5rem;
+            transition: all 0.3s;
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.6);
+            margin-top: 1rem;
+        }
+
+        .btn:hover {
+            background: #67e8f9;
+            box-shadow: 0 0 30px rgba(6, 182, 212, 0.8);
+            transform: translateY(-2px);
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .skill-card {
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid rgba(51, 65, 85, 1);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .skill-card:hover {
+            border-color: rgba(6, 182, 212, 0.5);
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .skill-card h4 {
+            color: #06b6d4;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 0.1em;
+        }
+
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .skill-tag {
+            background: rgba(6, 182, 212, 0.1);
+            color: #67e8f9;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.8rem;
+            border: 1px solid rgba(6, 182, 212, 0.2);
+            transition: all 0.3s;
+        }
+
+        .skill-tag:hover {
+            background: rgba(6, 182, 212, 0.2);
+            transform: scale(1.05);
+        }
+
+        .languages {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .language-item {
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid rgba(51, 65, 85, 1);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .language-item strong {
+            color: #06b6d4;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .experience-item {
+            background: rgba(30, 41, 59, 0.4);
+            border-left: 4px solid #06b6d4;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border-radius: 0 0.5rem 0.5rem 0;
+            transition: all 0.3s;
+        }
+
+        .experience-item:hover {
+            background: rgba(30, 41, 59, 0.6);
+            transform: translateX(10px);
+        }
+
+        .experience-item h3 {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .experience-company {
+            color: #67e8f9;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .experience-period {
+            color: #64748b;
+            font-size: 0.8rem;
+            background: rgba(51, 65, 85, 0.5);
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .experience-item p {
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+
+        .education-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .education-item {
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid rgba(51, 65, 85, 1);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .education-item:hover {
+            border-color: rgba(6, 182, 212, 0.5);
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.2);
+        }
+
+        .education-item h3 {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .education-item .institution {
+            color: #06b6d4;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .education-item .period {
+            color: #64748b;
+            font-size: 0.8rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            border-top: 1px solid #334155;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .profile-section {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .contact {
+                grid-template-columns: 1fr;
+            }
+
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .experience-item:hover {
+                transform: none;
+            }
+
+            .skill-card:hover,
+            .education-item:hover {
+                transform: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0.5rem;
+            }
+
+            .name {
+                font-size: 2rem;
+            }
+
+            .photo {
+                width: 120px;
+                height: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="background-canvas"></canvas>
+    <div class="overlay"></div>
+
+    <div class="container">
+        <header>
+            <div class="profile-section">
+                <div class="photo-container">
+                    <img src="https://kcdev420.github.io/cv_Kevin_Mora/kc1.jpg" alt="Kevin Steve Mora Herrera" class="photo">
+                </div>
+                <div>
+                    <h1 class="name">KEVIN STEVE <span class="highlight">MORA HERRERA</span></h1>
+                    <p class="subtitle">Estudiante de Big Data e Inteligencia de Negocios</p>
+                </div>
+            </div>
+
+            <div class="contact">
+                <a href="https://maps.google.com/?q=Quito,+Ecuador" target="_blank" class="contact-item">
+                    <span>📍</span> Quito, Ecuador
+                </a>
+                <a href="mailto:kevinsmora64@gmail.com" class="contact-item">
+                    <span>📧</span> kevinsmora64@gmail.com
+                </a>
+                <span class="contact-item">
+                    <span>📱</span> 0981268295 - 0967626785
+                </span>
+                <a href="https://www.linkedin.com/in/kevin-steve-mora-herrera" target="_blank" class="contact-item">
+                    <span>💼</span> /Kevin Steve
+                </a>
+                <a href="https://github.com/kcdev420" target="_blank" class="contact-item">
+                    <span>🐙</span> /kcdev420
+                </a>
+            </div>
+        </header>
+
+        <section id="perfil">
+            <h2 class="section-title">Perfil Profesional</h2>
+            <div class="profile">
+                <p>
+                    Tecnólogo en formación en <span class="highlight-text">Big Data e Inteligencia de Negocios</span> con experiencia en
+                    proyectos de análisis de datos, visualización interactiva y optimización de
+                    procesos. Manejo herramientas como <span class="highlight-text">R, Power BI, SQL y MongoDB</span>, con sólidos
+                    conocimientos en estadística aplicada, lo que me permite transformar datos en
+                    información valiosa para la toma de decisiones.
+                </p>
+                <a href="cv.pdf" download class="btn">Descargar CV Completo</a>
+            </div>
+        </section>
+
+        <section id="habilidades">
+            <h2 class="section-title">Habilidades Técnicas</h2>
+            <div class="skills-grid">
+                <div class="skill-card">
+                    <h4>Lenguajes</h4>
+                    <div class="skill-tags">
+                        <span class="skill-tag">R</span>
+                        <span class="skill-tag">SQL</span>
+                        <span class="skill-tag">Java</span>
+                        <span class="skill-tag">C++</span>
+                        <span class="skill-tag">HTML</span>
+                        <span class="skill-tag">PHP</span>
+                    </div>
+                </div>
+                <div class="skill-card">
+                    <h4>Bases de Datos</h4>
+                    <div class="skill-tags">
+                        <span class="skill-tag">PostgreSQL</span>
+                        <span class="skill-tag">MongoDB</span>
+                        <span class="skill-tag">MySQL</span>
+                    </div>
+                </div>
+                <div class="skill-card">
+                    <h4>Visualización</h4>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Power BI</span>
+                        <span class="skill-tag">RStudio</span>
+                        <span class="skill-tag">IBM SPSS</span>
+                    </div>
+                </div>
+                <div class="skill-card">
+                    <h4>Gestión de Datos</h4>
+                    <div class="skill-tags">
+                        <span class="skill-tag">GitHub</span>
+                        <span class="skill-tag">Excel Avanzado</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="idiomas">
+            <h2 class="section-title">Idiomas</h2>
+            <div class="languages">
+                <div class="language-item">
+                    <strong>Español</strong>
+                    Nativo
+                </div>
+                <div class="language-item">
+                    <strong>Inglés</strong>
+                    Intermedio
+                </div>
+            </div>
+        </section>
+
+        <section id="experiencia">
+            <h2 class="section-title">Experiencia Relevante</h2>
+
+            <div class="experience-item">
+                <h3>Proyecto de Análisis Interactivo del Agua Potable</h3>
+                <div class="experience-company">Proyecto Personal</div>
+                <div class="experience-period">2024 - 2025</div>
+                <p>
+                    Desarrollo de un sistema de monitoreo en tiempo real con dashboards dinámicos en
+                    <span class="highlight-text">R Shiny</span> y bases de datos NoSQL (<span class="highlight-text">MongoDB</span>),
+                    logrando mejorar la interpretación de datos de calidad de agua mediante gráficas de tendencias.
+                </p>
+                <a href="https://kc420.shinyapps.io/KPI_V17/" target="_blank" class="project-link" style="margin-top: 1rem; display: inline-block;">
+                     Ver proyecto 
+                </a>
+            </div>
+
+            <div class="experience-item">
+                <h3>Web para artistas</h3>
+                <div class="experience-company">Farm Music</div>
+                <div class="experience-period">2025 - 2025</div>
+                <p>
+                    Desarrollo de una paguina web que para una firma musical llamada Farm Music, en la cual se muestra informacion de los artistas que trabajan con ellos.
+                    Utilizando <span class="highlight-text">HTML, CSS y PHP</span>,
+                    logrando mejorar el alcance de los artistas mediante una plataforma digital atractiva e interactiva.
+                </p>
+                <a href="https://kcdev420.github.io/FARM_MUSIC/" target="_blank" class="project-link" style="margin-top: 1rem; display: inline-block;">
+                     Ver Sitio Web
+                </a>
+            </div>
+
+            <div class="experience-item">
+                <h3>Web de pedidos para un restaurante</h3>
+                <div class="experience-company">Proyecto Personal</div>
+                <div class="experience-period">2025 - 2025</div>
+                <p>
+                    Desarrollo de un sistema de pedidos en línea para un restaurante local, utilizando <span class="highlight-text">HTML, CSS y PHP</span>,
+                    logrando mejorar la experiencia del cliente y aumentar las ventas mediante una plataforma digital eficiente.
+            
+                </p>
+                <a href="https://kcdev420.github.io/La_Boveda/" target="_blank" class="project-link" style="margin-top: 1rem; display: inline-block;">
+                     Ver Sitio Web
+                </a>
+            </div>
+
+
+            <div class="experience-item">
+                <h3>Web de trackeo VR</h3>
+                <div class="experience-company">Proyecto Personal</div>
+                <div class="experience-period">2025 - 2025</div>
+                <p>
+                    Desarrolo de una paguina web para el seguimineto y trackeo de la mano controlando una nuve de puntos en un entorno de realidad virtual, utilizando <span class="highlight-text">HTML y CSS</span>,
+                    logrando mejorar la experiencia del usuario mediante una plataforma digital atractiva e interactiva.
+                </p>
+                <a href="https://kcdev420.github.io/VR1" target="_blank" class="project-link" style="margin-top: 1rem; display: inline-block;">
+                     Ver Sitio Web
+                </a>
+            </div>
+
+
+            <div class="experience-item">
+                <h3>Ayudante de Operación</h3>
+                <div class="experience-company">Bomi Group (UPS Healthcare)</div>
+                <div class="experience-period">2025</div>
+                <p>
+                    Gestión de inventarios y procesos logísticos de productos médicos con ILMS.
+                    Aseguré precisión y trazabilidad de datos, contribuyendo al flujo eficiente de bodega.
+                </p>
+            </div>
+
+            <div class="experience-item">
+                <h3>Analista de Procesos</h3>
+                <div class="experience-company">Consorcio Green Globe</div>
+                <div class="experience-period">2022 – 2023</div>
+                <p>
+                    Análisis y control de procesos en tratamiento de aguas (químico y físico).
+                    Implementación de técnicas de filtración y análisis de laboratorio para optimizar eficiencias.
+                </p>
+            </div>
+
+            <div class="experience-item">
+                <h3>Soporte Técnico</h3>
+                <div class="experience-company">Novopan del Ecuador</div>
+                <div class="experience-period">2019</div>
+                <p>
+                    Soporte a sistemas informáticos: mantenimiento de servidores, cableado estructurado y soporte técnico de hardware y software.
+                </p>
+            </div>
+        </section>
+
+        <section id="educacion">
+            <h2 class="section-title">Educación</h2>
+            <div class="education-grid">
+                <div class="education-item">
+                    <h3>Tecnología en Big Data e Inteligencia de Negocios</h3>
+                    <div class="institution">Instituto Tecnológico Superior Lendan</div>
+                    <div class="period">En curso, 2025-2026</div>
+                </div>
+                <div class="education-item">
+                    <h3>Técnico en Aplicaciones Informáticas</h3>
+                    <div class="institution">Colegio Nacional Cumbayá</div>
+                    <div class="period">2019</div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>© 2025 Kevin Steve Mora Herrera. Referencias disponibles bajo petición.</p>
+        </footer>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('background-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let points = [];
+        let mousePos = { x: 0, y: 0, prevX: 0, prevY: 0 };
+        let animationId;
+        let mouseSpeed = 0;
+
+        function initCanvas() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            initPoints();
+        }
+
+        function initPoints() {
+            points = [];
+            const numPoints = Math.max(60, Math.min(120, Math.floor((width * height) / 6000))); // Responsive number of points
+
+            for (let i = 0; i < numPoints; i++) {
+                points.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    vx: (Math.random() - 0.5) * 0.5,
+                    vy: (Math.random() - 0.5) * 0.5,
+                    size: Math.random() * 2.5 + 0.5,
+                    baseSize: Math.random() * 2.5 + 0.5,
+                    alpha: Math.random() * 0.6 + 0.3,
+                    baseAlpha: Math.random() * 0.6 + 0.3,
+                    color: `hsl(${180 + Math.random() * 60}, 70%, ${60 + Math.random() * 20}%)`,
+                    attracted: false,
+                    connections: [],
+                    energy: Math.random() * 0.5 + 0.5,
+                    trail: []
+                });
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+
+            // Calculate mouse speed for dynamic effects
+            const dx = mousePos.x - mousePos.prevX;
+            const dy = mousePos.y - mousePos.prevY;
+            mouseSpeed = Math.sqrt(dx * dx + dy * dy) * 0.1;
+            mousePos.prevX = mousePos.x;
+            mousePos.prevY = mousePos.y;
+
+            // Draw mouse illumination zone (dynamic size based on speed)
+            const mouseRadius = Math.min(100 + mouseSpeed * 20, width / 8);
+            const mouseGradient = ctx.createRadialGradient(mousePos.x, mousePos.y, 0, mousePos.x, mousePos.y, mouseRadius);
+            mouseGradient.addColorStop(0, `rgba(6, 182, 212, ${0.15 + mouseSpeed * 0.1})`);
+            mouseGradient.addColorStop(0.5, `rgba(6, 182, 212, ${0.08 + mouseSpeed * 0.05})`);
+            mouseGradient.addColorStop(1, 'rgba(6, 182, 212, 0)');
+
+            ctx.fillStyle = mouseGradient;
+            ctx.beginPath();
+            ctx.arc(mousePos.x, mousePos.y, mouseRadius, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Update and draw points
+            points.forEach((point, index) => {
+                // Reset connections
+                point.connections = [];
+
+                const mouseDx = mousePos.x - point.x;
+                const mouseDy = mousePos.y - point.y;
+                const mouseDistance = Math.sqrt(mouseDx * mouseDx + mouseDy * mouseDy);
+                const maxMouseDistance = Math.min(120 + mouseSpeed * 30, width / 8);
+
+                let mouseForce = 0;
+                let repulsionForce = 0;
+
+                // Mouse attraction/repulsion based on distance
+                if (mouseDistance < maxMouseDistance && mouseDistance > 0) {
+                    const mouseIntensity = 1 - (mouseDistance / maxMouseDistance);
+                    mouseForce = mouseIntensity * (0.8 + mouseSpeed * 0.5);
+
+                    // Attraction to mouse
+                    point.vx += (mouseDx / mouseDistance) * mouseForce * 0.3;
+                    point.vy += (mouseDy / mouseDistance) * mouseForce * 0.3;
+
+                    point.attracted = true;
+                    point.energy = Math.min(1, point.energy + mouseIntensity * 0.1);
+                } else {
+                    point.attracted = false;
+                    point.energy *= 0.98; // Gradual energy decay
+                }
+
+                // Point-to-point interactions
+                points.forEach((otherPoint, otherIndex) => {
+                    if (index !== otherIndex) {
+                        const dx = otherPoint.x - point.x;
+                        const dy = otherPoint.y - point.y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+
+                        // Repulsion when too close
+                        if (distance < 30 && distance > 0) {
+                            const repulsionIntensity = (30 - distance) / 30;
+                            repulsionForce = repulsionIntensity * 0.5;
+
+                            point.vx -= (dx / distance) * repulsionForce;
+                            point.vy -= (dy / distance) * repulsionForce;
+
+                            otherPoint.vx += (dx / distance) * repulsionForce;
+                            otherPoint.vy += (dy / distance) * repulsionForce;
+                        }
+
+                        // Connection formation
+                        if (distance < 80 && (point.attracted || otherPoint.attracted)) {
+                            point.connections.push({
+                                x: otherPoint.x,
+                                y: otherPoint.y,
+                                distance: distance,
+                                strength: Math.max(point.energy, otherPoint.energy)
+                            });
+                        }
+                    }
+                });
+
+                // Apply damping and limits
+                point.vx *= 0.92;
+                point.vy *= 0.92;
+
+                // Limit velocity
+                const maxVelocity = 3 + mouseSpeed * 2;
+                const velocity = Math.sqrt(point.vx * point.vx + point.vy * point.vy);
+                if (velocity > maxVelocity) {
+                    point.vx = (point.vx / velocity) * maxVelocity;
+                    point.vy = (point.vy / velocity) * maxVelocity;
+                }
+
+                // Apply velocity
+                point.x += point.vx;
+                point.y += point.vy;
+
+                // Bounce off edges with energy loss
+                if (point.x < 0 || point.x > width) {
+                    point.vx *= -0.7;
+                    point.x = Math.max(0, Math.min(width, point.x));
+                }
+                if (point.y < 0 || point.y > height) {
+                    point.vy *= -0.7;
+                    point.y = Math.max(0, Math.min(height, point.y));
+                }
+
+                // Update trail
+                point.trail.push({ x: point.x, y: point.y });
+                if (point.trail.length > 8) {
+                    point.trail.shift();
+                }
+
+                // Draw trail
+                if (point.trail.length > 1 && point.attracted) {
+                    ctx.strokeStyle = `rgba(6, 182, 212, ${point.energy * 0.2})`;
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    ctx.moveTo(point.trail[0].x, point.trail[0].y);
+                    for (let i = 1; i < point.trail.length; i++) {
+                        ctx.lineTo(point.trail[i].x, point.trail[i].y);
+                    }
+                    ctx.stroke();
+                }
+
+                // Draw connections
+                point.connections.forEach(conn => {
+                    ctx.strokeStyle = `rgba(6, 182, 212, ${conn.strength * 0.4})`;
+                    ctx.lineWidth = 0.5 + conn.strength * 1.5;
+                    ctx.beginPath();
+                    ctx.moveTo(point.x, point.y);
+                    ctx.lineTo(conn.x, conn.y);
+                    ctx.stroke();
+                });
+
+                // Calculate current appearance
+                let currentSize = point.baseSize * (1 + point.energy * 1.5);
+                let currentAlpha = point.baseAlpha * (0.7 + point.energy * 0.8);
+
+                // Draw point
+                ctx.fillStyle = point.color.replace('hsl', 'hsla').replace(')', `, ${currentAlpha})`);
+                ctx.shadowBlur = point.attracted ? 8 + mouseSpeed * 5 : 0;
+                ctx.shadowColor = point.color;
+
+                ctx.beginPath();
+                ctx.arc(point.x, point.y, currentSize, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Add sparkle effect for high energy points
+                if (point.energy > 0.8) {
+                    ctx.fillStyle = `rgba(255, 255, 255, ${point.energy * 0.6})`;
+                    ctx.beginPath();
+                    ctx.arc(point.x, point.y, currentSize * 0.3, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            });
+
+            animationId = requestAnimationFrame(animate);
+        }
+
+        function handleMouseMove(e) {
+            const rect = canvas.getBoundingClientRect();
+            mousePos.x = e.clientX - rect.left;
+            mousePos.y = e.clientY - rect.top;
+        }
+
+        function handleTouchMove(e) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const rect = canvas.getBoundingClientRect();
+            mousePos.x = touch.clientX - rect.left;
+            mousePos.y = touch.clientY - rect.top;
+        }
+
+        function handleResize() {
+            cancelAnimationFrame(animationId);
+            initCanvas();
+            animate();
+        }
+
+        // Initialize
+        initCanvas();
+        animate();
+
+        // Event listeners
+        window.addEventListener('resize', handleResize);
+        window.addEventListener('mousemove', handleMouseMove);
+        window.addEventListener('touchmove', handleTouchMove, { passive: false });
+
+        // Performance optimization: pause animation when page is not visible
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                cancelAnimationFrame(animationId);
+            } else {
+                animate();
+            }
+        });
+    </script>
+</body>
+</html>
