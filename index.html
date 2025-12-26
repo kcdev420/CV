@@ -827,7 +827,6 @@
         }
 
         function handleTouchMove(e) {
-            e.preventDefault();
             const touch = e.touches[0];
             const rect = canvas.getBoundingClientRect();
             mousePos.x = touch.clientX - rect.left;
@@ -861,3 +860,4 @@
 </body>
 
 </html>
+
